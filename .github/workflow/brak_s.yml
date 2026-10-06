@@ -1,0 +1,7 @@
+name: brak_s
+on: push
+jobs:
+  zadanie:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo Ten przeplyw nie powinien sie uruchomic
