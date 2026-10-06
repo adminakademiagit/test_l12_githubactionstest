@@ -1,0 +1,7 @@
+name: zly_tabulator
+on: push
+jobs:
+  zadanie:
+	runs-on: ubuntu-latest
+    steps:
+      - run: echo test
