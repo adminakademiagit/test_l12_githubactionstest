@@ -35,7 +35,7 @@ jobs:
         run: echo "Zawsze"
 
       - name: Uruchom po awarii
-        if: failure()
+        if: always()
         run: echo "Po awarii"
 
       - name: Uruchom po sukcesie
@@ -45,7 +45,7 @@ jobs:
   drugie_zadanie:
     runs-on: ubuntu-26.04
     needs: testy_warunku
-    if: failure()
+    if: always()
     steps:
       - name: Drugie zadanie
         run: echo "Drugie zadanie wykonane"
