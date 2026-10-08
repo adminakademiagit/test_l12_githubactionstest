@@ -1,0 +1,30 @@
+name: proba_404
+on:
+  push:
+    paths:
+      - '.github/workflows/proba_404.yml'
+jobs:
+  proba:
+    runs-on: ubuntu-latest
+    env:
+      NFT_URL: https://www.netfilter.org/projects/nftables/files/nftables-1.0.6.9.tar.xz
+      NFT_DIR: downloads
+      NFT_FILE: nftables-1.0.6.9.tar.xz
+      NFT_KEY_FILE: downloads/nftables.url
+    steps:
+      - name: Przygotuj katalog i plik z URL do klucza cache
+        run: |
+          mkdir -p "$NFT_DIR"
+          echo "$NFT_URL" > "$NFT_KEY_FILE"
+      - name: Przywróć/zapisz cache dla nftables
+        id: cache-nft
+        uses: actions/cache@v6
+        with:
+          path: ${{ env.NFT_DIR }}/nftables-1.0.6.9.tar.xz
+          key: proba404-${{ runner.os }}-${{ hashFiles(env.NFT_KEY_FILE) }}
+      - name: Pobierz nftables (jeśli brak w cache)
+        if: steps.cache-nft.outputs.cache-hit != 'true'
+        run: |
+          echo "Brak trafienia w cache — pobieram z: $NFT_URL"
+          curl -fL "$NFT_URL" -o "$NFT_DIR/$NFT_FILE"
+          ls -lh "$NFT_DIR"
