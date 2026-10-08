@@ -1,0 +1,36 @@
+name: proba_cache
+on:
+  push:
+    paths:
+      - '.github/workflows/proba_cache.yml'
+jobs:
+  proba:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Plik do zapisania
+        run: |
+          mkdir -p downloads
+          echo "proba $(date)" > downloads/plik.txt
+
+      - name: Cache z restore-keys
+        id: c1
+        uses: actions/cache@v4
+        with:
+          path: downloads/plik.txt
+          key: proba-stala-${{ github.run_attempt }}
+          restore-keys: |
+            proba-stala-
+
+      - name: Tylko odczyt dokladnego klucza
+        id: c2
+        uses: actions/cache/restore@v4
+        with:
+          path: downloads/plik.txt
+          key: proba-stala-1
+
+      - name: Wyniki
+        run: |
+          echo "c1.cache-hit=[${{ steps.c1.outputs.cache-hit }}] c1.cache-matched-key=[${{ steps.c1.outputs.cache-matched-key }}]"
+          echo "c2.cache-hit=[${{ steps.c2.outputs.cache-hit }}] c2.cache-matched-key=[${{ steps.c2.outputs.cache-matched-key }}]"
+          echo "warunek != 'true' -> ${{ steps.c1.outputs.cache-hit != 'true' }}"
+          cat downloads/plik.txt
